@@ -10,6 +10,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Component
 public interface UserInterface {
 
-    @RequestMapping(value = "/user/getUsers/{userName}",method = RequestMethod.GET)
-    String getUsers(@PathVariable("userName") String userName);
+    @RequestMapping(value = "/user/getUsers",method = RequestMethod.GET)
+    String getUsers();
 }

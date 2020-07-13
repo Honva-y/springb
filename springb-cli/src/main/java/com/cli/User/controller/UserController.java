@@ -21,7 +21,7 @@ public class UserController {
     @RequestMapping("/getUsers")
     public String getUsers(){
         System.out.println(">>> cli service in....");
-        String result = userInterface.getUsers("tom");
+        String result = userInterface.getUsers();
         return result;
     }
 }
