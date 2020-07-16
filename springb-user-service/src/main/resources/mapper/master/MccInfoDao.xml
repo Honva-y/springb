@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.user.dao.MccInfoDao">
+    <resultMap id="mccInfo" type="com.user.entity.MccInfo">
+        <result property="mccCode" column="f_mcc_code"/>
+        <result property="mccTxt" column="f_mcc_txt"/>
+    </resultMap>
+
+    <select id="queryMccInfo" resultMap="mccInfo">
+        select * from t_mcc_info;
+    </select>
+
+</mapper>
