@@ -17,6 +17,19 @@ spring:
       password: 123456
       driver-class-name: com.mysql.cj.jdbc.Driver
       type: com.alibaba.druid.pool.DruidDataSource
+  props:
+    sql:
+      show: true
+
+# 方法一 打印sql日志
+logging:
+  level:
+    com.user.dao.*: debug
+
+# 方法二 打印sql日志
+#mybatis:
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 eureka:
   client:
