@@ -76,7 +76,7 @@
     <bean id="mapperScannerConfig" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="sqlSessionFactoryBeanName" ref="sqlSessionFactory-zx"/>
         <property name="basePackage" value="com.user.dao"/>
-        <property name="annotationClass" value="com.user.config.daoAnnotation.ClusterDataSource"/>
+        <property name="annotationClass" value="com.user.config.daoAnnotation.MasterDataSource"/>
     </bean>
     <!--    配置事务-->
     <bean id="zx-transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
