@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:master-slave="http://shardingsphere.io/schema/shardingsphere/masterslave"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context.xsd
+                        http://www.springframework.org/schema/tx
+                        http://www.springframework.org/schema/tx/spring-tx.xsd
+                        http://shardingsphere.io/schema/shardingsphere/masterslave
+                        http://shardingsphere.io/schema/shardingsphere/masterslave/master-slave.xsd">
+    <context:annotation-config/>
+    <context:component-scan base-package="io.shardingsphere.example.spring.namespace.jpa"/>
+
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="masterSlaveDataSource"/>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" p:database="MYSQL"/>
+        </property>
+        <property name="packagesToScan" value="io.shardingsphere.example.spring.namespace.jpa.entity"/>
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+                <prop key="hibernate.hbm2ddl.auto">create</prop>
+                <prop key="hibernate.show_sql">true</prop>
+            </props>
+        </property>
+    </bean>
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"
+          p:entityManagerFactory-ref="entityManagerFactory"/>
+    <tx:annotation-driven/>
+
+    <bean id="ds_master" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+        <property name="driverClassName" value="${spring.datasource.master.driver-class-name}"/>
+        <property name="url" value="${spring.datasource.master.url}"/>
+        <property name="username" value="${spring.datasource.master.username}"/>
+        <property name="password" value="${spring.datasource.master.password}"/>
+    </bean>
+
+    <bean id="ds_slave0" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+        <property name="driverClassName" value="${spring.datasource.cluster.driver-class-name}"/>
+        <property name="url" value="${spring.datasource.cluster.url}"/>
+        <property name="username" value="${spring.datasource.cluster.username}"/>
+        <property name="password" value="${spring.datasource.cluster.password}"/>
+    </bean>
+
+    <bean id="ds_slave1" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+        <property name="driverClassName" value="${spring.datasource.cluster.driver-class-name}"/>
+        <property name="url" value="${spring.datasource.cluster.url}"/>
+        <property name="username" value="${spring.datasource.cluster.username}"/>
+        <property name="password" value="${spring.datasource.cluster.password}"/>
+    </bean>
+
+    <bean id="randomStrategy"
+          class="io.shardingsphere.api.algorithm.masterslave.RandomMasterSlaveLoadBalanceAlgorithm"/>
+
+    <master-slave:data-source id="masterSlaveDataSource" master-data-source-name="ds_master"
+                              slave-data-source-names="ds_slave0, ds_slave1" strategy-ref="randomStrategy">
+        <master-slave:props>
+            <prop key="sql.show">${sql_show}</prop>
+            <prop key="executor.size">10</prop>
+            <prop key="foo">bar</prop>
+        </master-slave:props>
+    </master-slave:data-source>
+
+    <!--     mybatis 的datasource、mapper映射-->
+    <bean id="sqlSessionFactory-zx" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="masterSlaveDataSource"/>
+        <property name="mapperLocations" value="classpath*:mapper/master/*.xml"/>
+    </bean>
+    <!--    mybatis 注解，dao，数据库配置-->
+    <bean id="mapperScannerConfig" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="sqlSessionFactoryBeanName" ref="sqlSessionFactory-zx"/>
+        <property name="basePackage" value="com.user.dao"/>
+        <property name="annotationClass" value="com.user.config.daoAnnotation.ClusterDataSource"/>
+    </bean>
+    <!--    配置事务-->
+    <bean id="zx-transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <constructor-arg ref="masterSlaveDataSource"/>
+    </bean>
+    <!--开启注解-->
+    <tx:annotation-driven transaction-manager="zx-transactionManager" proxy-target-class="true"/>
+</beans>

@@ -28,9 +28,9 @@ import java.util.Map;
 @RequestMapping("user")
 public class UserService {
 
-    @Autowired
-    @Qualifier("masterDao")
-    JdbcTemplate jdbcTemplate;
+//    @Autowired
+//    @Qualifier("masterDao")
+//    JdbcTemplate jdbcTemplate;
 
     @Autowired
     MccInfoDao mccInfoDao;

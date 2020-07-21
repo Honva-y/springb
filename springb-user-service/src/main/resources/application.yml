@@ -12,7 +12,7 @@ spring:
       driver-class-name: com.mysql.cj.jdbc.Driver
       type: com.alibaba.druid.pool.DruidDataSource
     cluster:
-      url: jdbc:mysql://localhost:3306/zx-business?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false
+      url: jdbc:mysql://localhost:3306/zx-business-1?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false
       username: root
       password: 123456
       driver-class-name: com.mysql.cj.jdbc.Driver

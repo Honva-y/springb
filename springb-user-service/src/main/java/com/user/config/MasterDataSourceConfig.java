@@ -17,8 +17,8 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import javax.sql.DataSource;
 
 
-@Configuration
-public class DataSourceConfig {
+//@Configuration
+public class MasterDataSourceConfig {
 
     // masterDataSource 对应mapper
     private static final String MASTER_MAPPER_LOCATION = "classpath*:mapper/master/*.xml";
