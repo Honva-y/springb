@@ -18,7 +18,7 @@
         <spring.boot.version>2.3.1.RELEASE</spring.boot.version>
         <spring-cloud.version>Hoxton.SR4</spring-cloud.version>
         <spring-cloud.feign>1.4.7.RELEASE</spring-cloud.feign>
-        <mysql-connection>8.0.16</mysql-connection>
+        <mysql-connection>8.0.28</mysql-connection>
         <alibaba-druid-version>1.0.12</alibaba-druid-version>
         <spring-mybatis>2.0.0</spring-mybatis>
     </properties>
